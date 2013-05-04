@@ -38,8 +38,10 @@ function loadTimeResults() {
     var result = results.all[index];
         
     var insert = "INSERT INTO " + result_table + 
-      " (TestNumber, StoryTime, QuestionTime) VALUES(" + 
+      " (TestNumber, QuestionPracticeTime, StoryPracticeTime, QuestionTime, StoryTime) VALUES(" + 
       "'" + result.testNumber + "', " + 
+      "'" + result.questionPracticeTime + "', " +        
+      "'" + result.storyPracticeTime + "', " +
       "'" + result.questionTime + "', " +
       "'" + result.storyTime + "')";
         

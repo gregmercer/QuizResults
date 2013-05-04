@@ -1,24 +1,89 @@
+/*
+
+p1
+
+descubrió[Pret]
+sabe
+daba[Imp]
+poseía[Imp]
+sacrificaron[Pret]
+
+p2
+
+construyeron[Pret]
+admiraban.[Imp]
+era[Imp]
+conoce
+dio[Pret]
+es
+Es
+
+p3
+
+supone
+empezó[Pret]
+tiene
+querían[Imp]
+son
+incluyó[Pret]
+son
+demostraban[Imp]
+
+p4
+
+pusieron[Pret]
+cuelga
+indica
+alimenten
+incluían[Imp]
+simboliza
+
+p5
+
+encontró[Pret]
+Estaba[Imp]
+podía[Imp]
+honraban[Imp]
+trasladaron[Pret]
+colocaron[Pret]
+está
+
+*/
+
 var storyAnswers = [
-    "p1.encontró[Pret]"    
-  , "p1.Daba[Imp]"
+    "p1.descubrió[Pret]"    
+  , "p1.sabe"
+  , "p1.daba[Imp]"
   , "p1.poseía[Imp]"
-  , "p1.sacrificaron[Pret]" 
-  , "p2.construyeron[Pret]"
-  , "p2.admiraban.[Imp]"
-  , "p2.era[Imp]"
-  , "p2.dieron[Pret]"
-  , "p3.empezaron[Pret]"
-  , "p3.adoraba[Imp]"
-  , "p3.pusieron[Pret]"
-  , "p3.demostraban[Imp]"
-  , "p4.colocaron[Pret]"
-  , "p4.incluía[Imp]"
-  , "p5.encontró[Pret]"
-  , "p5.Estaba[Imp]"
-  , "p5.podía[Imp]"
-  , "p5.honraban[Imp]"
-  , "p5.trasladaron[Pret]"
+  , "p1.sacrificaron[Pret]"  
+  , "p2.construyeron[Pret]"  
+  , "p2.admiraban.[Imp]"  
+  , "p2.era[Imp]"  
+  , "p2.conoce"  
+  , "p2.dio[Pret]"  
+  , "p2.es"  
+  , "p2.Es"
+  , "p3.supone"
+  , "p3.empezó[Pret]"
+  , "p3.tiene"
+  , "p3.querían[Imp]"
+  , "p3.son" 
+  , "p3.incluyó[Pret]" 
+  , "p3.son" 
+  , "p3.demostraban[Imp]"    
+  , "p4.pusieron[Pret]"
+  , "p4.cuelga"
+  , "p4.indica"
+  , "p4.alimenten"
+  , "p4.incluían[Imp]"
+  , "p4.simboliza"
+  , "p5.encontró[Pret]"  
+  , "p5.Estaba[Imp]"  
+  , "p5.podía[Imp]"  
+  , "p5.honraban[Imp]"  
+  , "p5.trasladaron[Pret]"  
   , "p5.colocaron[Pret]"  
+  , "p5.está"  
 ];
 
 module.exports.all = storyAnswers;
