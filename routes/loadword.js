@@ -11,6 +11,10 @@ var results = require("../results");
 
 var storyAnswers = require("../storyAnswers");
 
+// quiz distractor answers
+
+var distractorAnswers = require("../distractorAnswers");
+
 // mysql
 
 var mysql = require('mysql');
@@ -42,20 +46,24 @@ function loadWordResults() {
     var result = results.all[index];
     
     var words = "";
+    var distractorWords = "";
     var correctWords = "";
+    var incorrectWords = "";
+    var numberDistractorWords = 0;
     var numberCorrectWords = 0;
     var numberIncorrectWords = 0;    
 
-	var dropMark = false;
-	
-	if (result.testNumber.charAt(0) == 1) {
-	  numberCorrectWords = -1;
-	  numberIncorrectWords = -1;
-	}
-    
-	if (result.testNumber.charAt(0) == 2) {
-	  dropMark = true;
-	}    
+  	var dropMark = false;
+  	
+  	if (result.testNumber.charAt(0) == 1) {
+      numberDistractorWords = -1;
+  	  numberCorrectWords = -1;
+  	  numberIncorrectWords = -1;
+  	}
+      
+  	if (result.testNumber.charAt(0) == 2) {
+  	  dropMark = true;
+  	}    
     
     wordsloop: for (words_index in result.words) {
     
@@ -70,26 +78,41 @@ function loadWordResults() {
       // or only check word if dropMark equals true
       
       var wordAnswer = storyAnswers.find(word,dropMark);
-      
-      if (wordAnswer) {
+
+      var distractorAnswer = distractorAnswers.find(word);
+
+      if (distractorAnswer) {
+        if (distractorWords.length != 0) {
+          distractorWords += ", ";  
+        }
+        distractorWords += word;
+        numberDistractorWords++;
+      } else if (wordAnswer) {
         if (correctWords.length != 0) {
           correctWords += ", ";  
         }
         correctWords += word;
         numberCorrectWords++;
       } else {
+        if (incorrectWords.length != 0) {
+          incorrectWords += ", ";  
+        }
+        incorrectWords += word;        
       	numberIncorrectWords++;
       }
     
     } // end wordsloop
     
     var insert = "INSERT INTO " + result_table + 
-        " (TestNumber, NumberCorrectWords, NumberIncorrectWords, SelectedWords, CorrectWords) VALUES(" + 
+        " (TestNumber, NumberDistractorWords, NumberCorrectWords, NumberIncorrectWords, SelectedWords, DistractorWords, CorrectWords, IncorrectWords) VALUES(" + 
         "'" + result.testNumber + "', " + 
+        "'" + numberDistractorWords + "', " + 
         "'" + numberCorrectWords + "', " + 
         "'" + numberIncorrectWords + "', " + 
         "'" + words + "', " + 
-        "'" + correctWords + "')"; 
+        "'" + distractorWords + "', " + 
+        "'" + correctWords + "', " +         
+        "'" + incorrectWords + "')"; 
      
     client.query(insert,
       function selectCb(err, results, fields) {
