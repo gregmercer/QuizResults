@@ -46,73 +46,122 @@ function loadWordResults() {
     var result = results.all[index];
     
     var words = "";
-    var distractorWords = "";
-    var correctWords = "";
-    var incorrectWords = "";
-    var numberDistractorWords = 0;
-    var numberCorrectWords = 0;
-    var numberIncorrectWords = 0;    
 
-  	var dropMark = false;
-  	
+    var distractorWords = "";
+    var correctlySelectedWords = "";
+    var incorrectlySelectedWords = "";
+    var correctlyIndentifiedWords = "";
+
+    var numberDistractorWords = 0;
+    var numberCorrectlySelected = 0;
+    var numberIncorrectlySelected = 0;    
+    var numberCorrectlyIndentified = 0;
+
   	if (result.testNumber.charAt(0) == 1) {
       numberDistractorWords = -1;
-  	  numberCorrectWords = -1;
-  	  numberIncorrectWords = -1;
+      numberCorrectlySelected = -1;
+      numberIncorrectlySelected = -1;    
+      numberCorrectlyIndentified = -1;
   	}
-      
-  	if (result.testNumber.charAt(0) == 2) {
-  	  dropMark = true;
-  	}    
     
     wordsloop: for (words_index in result.words) {
     
       var word = result.words[words_index];
         
+      // save the selected words
+
       if (words.length != 0) {
         words += ", ";  
       }
       words += word;   
-    
-      // see if the word[mark] is correct
-      // or only check word if dropMark equals true
-      
-      var wordAnswer = storyAnswers.find(word,dropMark);
 
-      var distractorAnswer = distractorAnswers.find(word);
+      // strip any mark off the word
+      
+      var raw_word = word;
+
+      var wordIndex = raw_word.indexOf("[");
+      if (wordIndex != -1) {
+        raw_word = raw_word.substring(0,wordIndex--);
+      }        
+    
+      // word is in the form of: word[mark]
+
+      // first... see if the word is a distractor 
+
+      var distractorAnswer = distractorAnswers.find(word);      
+
+      // next... see if the correct word is selected   
+      
+      var correctlySelected = storyAnswers.find(raw_word,true);
+
+      // last... see if the correct mark is used 
+
+      var correctlyIndentified = storyAnswers.find(word,false);
 
       if (distractorAnswer) {
+
+        // count up the number of distractors
+      
         if (distractorWords.length != 0) {
           distractorWords += ", ";  
         }
         distractorWords += word;
         numberDistractorWords++;
-      } else if (wordAnswer) {
-        if (correctWords.length != 0) {
-          correctWords += ", ";  
+      
+      } else if (correctlySelected) {
+
+        // count up the number of correctly selected
+        
+        if (correctlySelectedWords.length != 0) {
+          correctlySelectedWords += ", ";  
         }
-        correctWords += word;
-        numberCorrectWords++;
+        correctlySelectedWords += word;
+        numberCorrectlySelected++;
+
+        // count up the number of correctly identfied 
+
+        if (result.testNumber.charAt(0) == 2) {
+        } else {  
+
+          // we need to see if the word was correctly marked   
+
+          if (correctlyIndentified) {
+
+            if (correctlyIndentifiedWords.length != 0) {
+              correctlyIndentifiedWords += ", ";  
+            }
+            correctlyIndentifiedWords += word;
+            numberCorrectlyIndentified++;            
+
+          }
+
+        }
+
       } else {
-        if (incorrectWords.length != 0) {
-          incorrectWords += ", ";  
+      
+        if (incorrectlySelectedWords.length != 0) {
+          incorrectlySelectedWords += ", ";  
         }
-        incorrectWords += word;        
-      	numberIncorrectWords++;
+        incorrectlySelectedWords += word;        
+      	numberIncorrectlySelected++;
+      
       }
     
     } // end wordsloop
     
     var insert = "INSERT INTO " + result_table + 
-        " (TestNumber, NumberDistractorWords, NumberCorrectWords, NumberIncorrectWords, SelectedWords, DistractorWords, CorrectWords, IncorrectWords) VALUES(" + 
+        " (TestNumber, NumberDistractorWords, NumberCorrectlySelected, NumberIncorrectlySelected, NumberCorrectlyIndentified, " +
+        "SelectedWords, DistractorWords, CorrectlySelectedWords, IncorrectlySelectedWords, CorrectlyIndentifiedWords) VALUES(" + 
         "'" + result.testNumber + "', " + 
         "'" + numberDistractorWords + "', " + 
-        "'" + numberCorrectWords + "', " + 
-        "'" + numberIncorrectWords + "', " + 
+        "'" + numberCorrectlySelected + "', " + 
+        "'" + numberIncorrectlySelected + "', " + 
+        "'" + numberCorrectlyIndentified + "', " + 
         "'" + words + "', " + 
         "'" + distractorWords + "', " + 
-        "'" + correctWords + "', " +         
-        "'" + incorrectWords + "')"; 
+        "'" + correctlySelectedWords + "', " +    
+        "'" + incorrectlySelectedWords + "', " +            
+        "'" + correctlyIndentifiedWords + "')"; 
      
     client.query(insert,
       function selectCb(err, results, fields) {

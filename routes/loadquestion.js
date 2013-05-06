@@ -17,6 +17,7 @@ var mysql = require('mysql');
 
 var database = 'fred';
 var result_table = 'quiz_question_results';
+var result_totals_table = 'quiz_question_totals_results';
    
 var client = mysql.createClient({
   host: 'localhost',
@@ -37,10 +38,16 @@ exports.loadquestion = function(req, res) {
 
 function loadQuestionResults() {
 
+  var totalPracticeCorrect = 0;
+  var totalActualCorrect = 0;  
+
   resultsloop: for (index in results.all) {
     
     var result = results.all[index];
     
+    totalPracticeCorrect = 0;
+    totalActualCorrect = 0;     
+
     answersloop: for (answer_index in result.answers) {
     
       var answer = result.answers[answer_index];
@@ -50,7 +57,17 @@ function loadQuestionResults() {
       var correct = "No";
       
       if (questionAnswer.answer == answer.answer) {
+        
         correct = "Yes";
+        
+        var questionId = answer.questionId;
+
+        if (questionId.charAt(0) == 'p') {
+          totalPracticeCorrect++;
+        } else {
+          totalActualCorrect++;
+        }
+
       }
     
       var insert = "INSERT INTO " + result_table + 
@@ -70,6 +87,19 @@ function loadQuestionResults() {
       console.log("insert = " + insert);  
     
     } // end answersloop
+
+    insert = "INSERT INTO " + result_totals_table + 
+        " (TestNumber, TotalPracticeCorrect, TotalActualCorrect) VALUES(" + 
+        "'" + result.testNumber + "', " + 
+        "'" + totalPracticeCorrect + "', " +
+        "'" + totalActualCorrect + "')"; 
+
+    client.query(insert,
+      function selectCb(err, results, fields) {
+        if (err) { throw err; }
+        console.log('insert complete');
+      }
+    );    
     
   } // resultsloop
 
