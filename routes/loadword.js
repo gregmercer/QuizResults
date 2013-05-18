@@ -11,6 +11,10 @@ var results = require("../results");
 
 var storyAnswers = require("../storyAnswers");
 
+// quiz story practice answers
+
+var storyPracticeAnswers = require("../storyPracticeAnswers");
+
 // quiz distractor answers
 
 var distractorAnswers = require("../distractorAnswers");
@@ -21,6 +25,7 @@ var mysql = require('mysql');
 
 var database = 'fred';
 var result_table = 'quiz_word_results';
+var result_practice_table = 'quiz_word_practice_results';
    
 var client = mysql.createClient({
   host: 'localhost',
@@ -34,6 +39,8 @@ client.useDatabase(database);
 exports.loadword = function(req, res) {
 
   loadWordResults();
+
+  loadWordPracticeResults();
 
   res.render('loadword', { title: 'Quiz Results - Load and Evaluate Word Results', ret_string: "status: Load word results complete."} );
 
@@ -175,3 +182,122 @@ function loadWordResults() {
   } // resultsloop
 
 }
+
+function loadWordPracticeResults() {
+
+  resultsloop: for (index in results.all) {
+    
+    var result = results.all[index];
+    
+    var words = "";
+
+    var correctlySelectedWords = "";
+    var incorrectlySelectedWords = "";
+    var correctlyIndentifiedWords = "";
+
+    var numberCorrectlySelected = 0;
+    var numberIncorrectlySelected = 0;    
+    var numberCorrectlyIndentified = 0;
+
+    if (result.testNumber.charAt(0) == 1) {
+      numberCorrectlySelected = -1;
+      numberIncorrectlySelected = -1;    
+      numberCorrectlyIndentified = -1;
+    }
+    
+    wordsloop: for (words_index in result.wordsPractice) {
+    
+      var word = result.wordsPractice[words_index];
+        
+      // save the selected words
+
+      if (words.length != 0) {
+        words += ", ";  
+      }
+      words += word;   
+
+      // strip any mark off the word
+      
+      var raw_word = word;
+
+      var wordIndex = raw_word.indexOf("[");
+      if (wordIndex != -1) {
+        raw_word = raw_word.substring(0,wordIndex--);
+      }        
+    
+      // word is in the form of: word[mark]  
+
+      // first... see if the correct word is selected   
+      
+      var correctlySelected = storyPracticeAnswers.find(raw_word,true);
+
+      // last... see if the correct mark is used 
+
+      var correctlyIndentified = storyPracticeAnswers.find(word,false);
+
+      if (correctlySelected) {
+
+        // count up the number of correctly selected
+        
+        if (correctlySelectedWords.length != 0) {
+          correctlySelectedWords += ", ";  
+        }
+        correctlySelectedWords += word;
+        numberCorrectlySelected++;
+
+        // count up the number of correctly identfied 
+
+        if (result.testNumber.charAt(0) == 2) {
+        } else {  
+
+          // we need to see if the word was correctly marked   
+
+          if (correctlyIndentified) {
+
+            if (correctlyIndentifiedWords.length != 0) {
+              correctlyIndentifiedWords += ", ";  
+            }
+            correctlyIndentifiedWords += word;
+            numberCorrectlyIndentified++;            
+
+          }
+
+        }
+
+      } else {
+      
+        if (incorrectlySelectedWords.length != 0) {
+          incorrectlySelectedWords += ", ";  
+        }
+        incorrectlySelectedWords += word;        
+        numberIncorrectlySelected++;
+      
+      }
+    
+    } // end wordsloop
+    
+    var insert = "INSERT INTO " + result_practice_table + 
+        " (TestNumber, NumberCorrectlySelected, NumberIncorrectlySelected, NumberCorrectlyIndentified, " +
+        "SelectedWords, CorrectlySelectedWords, IncorrectlySelectedWords, CorrectlyIndentifiedWords) VALUES(" + 
+        "'" + result.testNumber + "', " + 
+        "'" + numberCorrectlySelected + "', " + 
+        "'" + numberIncorrectlySelected + "', " + 
+        "'" + numberCorrectlyIndentified + "', " + 
+        "'" + words + "', " + 
+        "'" + correctlySelectedWords + "', " +    
+        "'" + incorrectlySelectedWords + "', " +            
+        "'" + correctlyIndentifiedWords + "')"; 
+     
+    client.query(insert,
+      function selectCb(err, results, fields) {
+        if (err) { throw err; }
+        console.log('insert complete');
+      }
+    ); 
+    
+    console.log(insert);
+                
+  } // resultsloop
+
+}
+

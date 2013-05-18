@@ -17,7 +17,14 @@ CREATE TABLE `quiz_word_results` (
   `CorrectlyIndentifiedWords` text DEFAULT NULL    
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
-
-
+CREATE TABLE `quiz_word_practice_results` (
+  `TestNumber` varchar(4096) DEFAULT NULL,
+  `NumberCorrectlySelected` text DEFAULT NULL,
+  `NumberIncorrectlySelected` text DEFAULT NULL,
+  `NumberCorrectlyIndentified` text DEFAULT NULL,
+  `SelectedWords` text DEFAULT NULL,
+  `CorrectlySelectedWords` text DEFAULT NULL,
+  `IncorrectlySelectedWords` text DEFAULT NULL,  
+  `CorrectlyIndentifiedWords` text DEFAULT NULL    
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

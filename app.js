@@ -13,6 +13,7 @@ var index = require("./routes/index");
 var loadquestion = require("./routes/loadquestion");
 var loadword = require("./routes/loadword");
 var loadtime = require("./routes/loadtime");
+var loadpoll = require("./routes/loadpoll");
 
 var app = express();
 
@@ -39,6 +40,8 @@ app.get('/loadQuestionResults', loadquestion.loadquestion);
 app.get('/loadWordResults', loadword.loadword);
 
 app.get('/loadTimeResults', loadtime.loadtime);
+
+app.get('/loadPollResults', loadpoll.loadpoll);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
