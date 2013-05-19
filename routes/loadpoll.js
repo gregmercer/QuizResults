@@ -1,6 +1,6 @@
 
 /*
- * GET loadquestion page.
+ * GET loadpoll page.
  */
 
 // quiz results  
@@ -40,12 +40,22 @@ function loadPollResults() {
     answersloop: for (answer_index in result.pollAnswers) {
     
       var answer = result.pollAnswers[answer_index];
-        
+
+      // poll answers are for example s1r1 - s1r11
+
+      var pollAnswer = answer.answer;
+      var pos = pollAnswer.indexOf('r');
+      console.log("pos = " + pos);
+      pollAnswer = pollAnswer.substr(pos+1);
+      console.log("pollAnswer = " + pollAnswer);      
+      pollAnswer = parseInt(pollAnswer, 10);
+      pollAnswer = pollAnswer - 1;
+
       var insert = "INSERT INTO " + result_table + 
         " (TestNumber, PollQuestion, PollAnswer) VALUES(" + 
         "'" + result.testNumber + "', " + 
         "'" + answer.pollId + "', " +        
-        "'" + answer.answer + "')";
+        "'" + pollAnswer + "')";
         
         client.query(insert,
           function selectCb(err, results, fields) {
