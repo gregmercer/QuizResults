@@ -15,9 +15,13 @@ var storyAnswers = require("../storyAnswers");
 
 var storyPracticeAnswers = require("../storyPracticeAnswers");
 
-// quiz distractor answers
+// quiz story distractor answers
 
 var distractorAnswers = require("../distractorAnswers");
+
+// quiz story confusion answers
+
+var confusionAnswers = require("../confusionAnswers");
 
 // mysql
 
@@ -55,17 +59,20 @@ function loadWordResults() {
     var words = "";
 
     var distractorWords = "";
+    var confusionWords = "";
     var correctlySelectedWords = "";
     var incorrectlySelectedWords = "";
     var correctlyIndentifiedWords = "";
 
     var numberDistractorWords = 0;
+    var numberConfusionWords = 0;
     var numberCorrectlySelected = 0;
     var numberIncorrectlySelected = 0;    
     var numberCorrectlyIndentified = 0;
 
   	if (result.testNumber.charAt(0) == 1) {
       numberDistractorWords = -1;
+      numberConfusionWords = -1;
       numberCorrectlySelected = -1;
       numberIncorrectlySelected = -1;    
       numberCorrectlyIndentified = -1;
@@ -95,7 +102,11 @@ function loadWordResults() {
 
       // first... see if the word is a distractor 
 
-      var distractorAnswer = distractorAnswers.find(word);      
+      var distractorAnswer = distractorAnswers.find(word);    
+
+      // next... see if the word is a confusion 
+
+      var confusionAnswer = confusionAnswers.find(word);          
 
       // next... see if the correct word is selected   
       
@@ -114,6 +125,16 @@ function loadWordResults() {
         }
         distractorWords += word;
         numberDistractorWords++;
+      
+      } else if (confusionAnswer) {
+
+        // count up the number of confusions
+      
+        if (confusionWords.length != 0) {
+          confusionWords += ", ";  
+        }
+        confusionWords += word;
+        numberConfusionWords++;
       
       } else if (correctlySelected) {
 
@@ -157,15 +178,17 @@ function loadWordResults() {
     } // end wordsloop
     
     var insert = "INSERT INTO " + result_table + 
-        " (TestNumber, NumberDistractorWords, NumberCorrectlySelected, NumberIncorrectlySelected, NumberCorrectlyIndentified, " +
-        "SelectedWords, DistractorWords, CorrectlySelectedWords, IncorrectlySelectedWords, CorrectlyIndentifiedWords) VALUES(" + 
+        " (TestNumber, NumberDistractorWords, numberConfusionWords, NumberCorrectlySelected, NumberIncorrectlySelected, NumberCorrectlyIndentified, " +
+        "SelectedWords, DistractorWords, ConfusionWords, CorrectlySelectedWords, IncorrectlySelectedWords, CorrectlyIndentifiedWords) VALUES(" + 
         "'" + result.testNumber + "', " + 
         "'" + numberDistractorWords + "', " + 
+        "'" + numberConfusionWords + "', " +         
         "'" + numberCorrectlySelected + "', " + 
         "'" + numberIncorrectlySelected + "', " + 
         "'" + numberCorrectlyIndentified + "', " + 
         "'" + words + "', " + 
         "'" + distractorWords + "', " + 
+        "'" + confusionWords + "', " +         
         "'" + correctlySelectedWords + "', " +    
         "'" + incorrectlySelectedWords + "', " +            
         "'" + correctlyIndentifiedWords + "')"; 
