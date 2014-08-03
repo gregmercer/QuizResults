@@ -18,7 +18,7 @@ var client = mysql.createClient({
   host: 'localhost',
   port: '33066',
   user: 'root',
-  password: ''
+  password: 'root'
 });
 
 client.useDatabase(database);

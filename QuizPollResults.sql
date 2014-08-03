@@ -1,0 +1,9 @@
+CREATE TABLE `quiz_poll_results` (
+  `TestNumber` varchar(255) DEFAULT NULL,
+  `PollAnswer1` varchar(10) DEFAULT NULL, 
+  `PollAnswer2` varchar(10) DEFAULT NULL, 
+  `PollAnswer3` varchar(10) DEFAULT NULL, 
+  `PollAnswer4` varchar(10) DEFAULT NULL, 
+  `Explain1` varchar(1024) DEFAULT NULL, 
+  `Explain2` varchar(1024) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1

@@ -3,9 +3,21 @@
  * GET loadwordtime page.
  */
 
+// quiz results  
+  
+var results = require("../results"); 
+
 // quiz wordTimes  
   
 var wordTimes = require("../wordTimes");
+
+// quiz story answers
+
+var storyAnswers = require("../storyAnswers");
+
+// quiz story practice answers
+
+var storyPracticeAnswers = require("../storyPracticeAnswers");
 
 // mysql
 
@@ -18,7 +30,7 @@ var client = mysql.createClient({
   host: 'localhost',
   port: '33066',
   user: 'root',
-  password: ''
+  password: 'root'
 });
 
 client.useDatabase(database);
@@ -33,8 +45,13 @@ exports.loadwordtime = function(req, res) {
 
 function loadWordTime_getInfo(wordTimeRow) {
 
+  var testNumber = wordTimeRow.testNumber;
+  var storyType = wordTimeRow.storyType; 
+
+  var storyStartTime = findStoryStartTime(testNumber, storyType);  
+
   var words = wordTimeRow.words;
-  console.log('testNumber = '+wordTimeRow.testNumber+'words count = '+words.length)
+  console.log('testNumber = '+wordTimeRow.testNumber+' words count = '+words.length);
 
   words.sort(function (a, b) {
 
@@ -58,18 +75,55 @@ function loadWordTime_getInfo(wordTimeRow) {
     
   });   
 
+  // filter out any incorrect words
+
+  var correctWords = [];
+
+  //var wordSelectionOnly = storyWithWordSelectionOnly(testNumber);
+  var wordSelectionOnly = true;
+
   for (var wordIndex = 0; wordIndex < words.length; wordIndex++) {
 
-    //console.log('time = '+words[wordIndex].time+' word = '+words[wordIndex].word+' testNumber = '+results[index].testNumber);
+    var word = words[wordIndex].word;
+    var pos = word.indexOf("[");
+    if (pos != -1) {
+      word = word.substring(0,pos--);
+    }    
+
+    var correctlyIndentified = false;
+
+    if (storyType == 'story') {
+      correctlyIndentified = storyAnswers.find(word,wordSelectionOnly);  
+    } else if (storyType == 'practiceStory') {
+      correctlyIndentified = storyPracticeAnswers.find(word,wordSelectionOnly);  
+    }
+
+    if (correctlyIndentified) {
+      correctWords[correctWords.length] = words[wordIndex];
+    }
+
+  }  
+
+  console.log('testNumber = '+wordTimeRow.testNumber+' correctWords count = '+correctWords.length);
+
+  // insert words and times
+
+  for (var wordIndex = 0; wordIndex < correctWords.length; wordIndex++) {
+
+    //console.log('time = '+correctWords[wordIndex].time+' word = '+correctWords[wordIndex].word+' testNumber = '+results[index].testNumber);
 
     // Insert WordTime for word   
 
-    var word = words[wordIndex].word;
-    var wordTime = words[wordIndex].time;
+    var word = correctWords[wordIndex].word;
+    var wordTime = correctWords[wordIndex].time;
     var timeBetween = '';
 
+    if (wordIndex == 0) {
+      timeBetween = wordTime - storyStartTime;
+    }
+
     if (wordIndex > 0) {
-      timeBetween = wordTime - words[wordIndex-1].time;
+      timeBetween = wordTime - correctWords[wordIndex-1].time;
     }
 
     var insert = "INSERT INTO " + result_table + 
@@ -94,11 +148,44 @@ function loadWordTime_getInfo(wordTimeRow) {
 
 }
 
+function storyWithWordSelectionOnly(testNumber) { 
+  
+  var firstNumber = testNumber.charAt(0);
+  if (firstNumber == 2) {
+    return true;
+  }
+  
+  return false;
+
+}
+
+function findStoryStartTime(testNumber, storyType) {
+
+  //console.log('in findResult testNumber = '+testNumber+' storyType = '+storyType);
+
+  var storyTime = null;  
+
+  resultsloop: for (index in results.all) {  
+    var resultsRow = results.all[index];
+    if (resultsRow.testNumber == testNumber) {
+      if (storyType == 'story') {
+        storyTime = resultsRow.storyStartTime; 
+      } else if (storyType == 'practiceStory') {
+        storyTime = resultsRow.storyPracticeStartTime;
+      }
+      break;
+    }
+  } // resultsLoop
+  
+  return storyTime; 
+}
+
 function loadWordTimeResults() {
 
   wordTimeloop: for (index in wordTimes.all) {
     
     var wordTimeRow = wordTimes.all[index];
+
     loadWordTime_getInfo(wordTimeRow);
     
   } // wordTimeloop
