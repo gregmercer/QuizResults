@@ -52,6 +52,7 @@ function convertAnswers() {
 
   wordTimesloop: for (index in wordTimes.all) {
   
+    //console.log('testNumber = ' + wordTimes.all[index].testNumber);
     //console.log('storyType = ' + wordTimes.all[index].storyType);
 
     var wordTimesItem = wordTimes.all[index];
@@ -100,6 +101,8 @@ function convertAnswers() {
     
     var result = results.all[index];
 
+    // convert story words
+
     var newWords = [];
 
     wordsloop: for (words_index in result.words) {
@@ -118,6 +121,27 @@ function convertAnswers() {
     //console.log('newWords[] = ' + newWords.join());
 
     result.words = newWords;
+
+    // convert storyPractice words
+
+    newWords = [];
+
+    wordsloop: for (words_index in result.wordsPractice) {
+    
+      var oldAnswer = result.wordsPractice[words_index];
+      var newAnswer = storyPracticeData.convert(oldAnswer);    
+
+      //console.log('oldAnswer = ' + oldAnswer);
+      //console.log('newAnswer = ' + newAnswer);
+
+      newWords[newWords.length] = newAnswer;
+
+    } // end wordsloop  
+
+    //console.log('oldWords[] = ' + result.wordsPractice.join());
+    //console.log('newWords[] = ' + newWords.join());
+
+    result.wordsPractice = newWords;    
 
     newResults[newResults.length] = result;
         

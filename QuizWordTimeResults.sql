@@ -1,0 +1,10 @@
+CREATE TABLE `quiz_word_time_results` (
+  `TestNumber` varchar(20) DEFAULT NULL,
+  `StoryType` varchar(20) DEFAULT NULL,
+  `WordIndex` varchar(255) DEFAULT NULL,
+  `Word` varchar(255) DEFAULT NULL,
+  `WordTime` varchar(255) DEFAULT NULL,
+  `TimeBetween` varchar(255) DEFAULT NULL,  
+  `DialogTime` varchar(255) DEFAULT NULL,  
+  `NetTimeBetween` varchar(255) DEFAULT NULL  
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

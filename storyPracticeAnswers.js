@@ -23,20 +23,20 @@ murió[Pret]
 */
 
 var storyPracticeAnswers = [
-    "p1.tenía[Imp]"    
-  , "p1.sufrió[Pret]"
-  , "p1.sobrevivió,[Pret]"
-  , "p1.quedó[Pret]"
-  , "p1.era[Imp]" 
-  , "p1.mantenía[Imp]"
-  , "p2.hacía[Imp]"    
-  , "p2.pintó[Pret]"         
-  , "p2.causaban[Imp]"     
-  , "p2.pintaba[Imp]"     
-  , "p2.utilizaba[Imp]"     
-  , "p2.apoderó[Pret]"     
-  , "p2.vieron[Pret]"     
-  , "p2.murió[Pret]"            
+    "p1w13.tenía[Imp]"    
+  , "p1w16.sufrió[Pret]"
+  , "p1w25.sobrevivió,[Pret]"
+  , "p1w32.quedó[Pret]"
+  , "p1w45.era[Imp]" 
+  , "p1w53.mantenía[Imp]"
+  , "p2w1.hacía[Imp]"    
+  , "p2w12.pintó[Pret]"         
+  , "p2w29.causaban[Imp]"     
+  , "p2w34.pintaba[Imp]"     
+  , "p2w45.utilizaba[Imp]"     
+  , "p2w74.apoderó[Pret]"     
+  , "p2w89.vieron[Pret]"     
+  , "p2w97.murió[Pret]"  
 ];
 
 module.exports.all = storyPracticeAnswers;

@@ -115,30 +115,39 @@ function loadWordTime_getInfo(wordTimeRow) {
     // Insert WordTime for word   
 
     var word = correctWords[wordIndex].word;
-    var wordTime = correctWords[wordIndex].time;
+    var currentWordTime = correctWords[wordIndex].time;
+    var prevWordTime = storyStartTime; 
+    if (wordIndex > 0 ) {
+      prevWordTime = correctWords[wordIndex-1].time;
+    }
     var timeBetween = '';
 
     if (wordIndex == 0) {
-      timeBetween = wordTime - storyStartTime;
+      timeBetween = currentWordTime - storyStartTime;
     }
 
     if (wordIndex > 0) {
-      timeBetween = wordTime - correctWords[wordIndex-1].time;
+      timeBetween = currentWordTime - prevWordTime;
     }
 
+    var dialogTime = findStoryDialogTime(testNumber, storyType, prevWordTime, currentWordTime);
+    var netTimeBetween = timeBetween - dialogTime;
+
     var insert = "INSERT INTO " + result_table + 
-      " (TestNumber, StoryType, WordIndex, Word, WordTime, TimeBetween) VALUES(" + 
+      " (TestNumber, StoryType, WordIndex, Word, WordTime, TimeBetween, DialogTime, NetTimeBetween) VALUES(" + 
       "'" + wordTimeRow.testNumber + "', " + 
       "'" + wordTimeRow.storyType + "', " + 
       "'" + wordIndex + "', " + 
       "'" + word + "', " + 
-      "'" + wordTime + "', " +     
-      "'" + timeBetween + "')"; 
-      
+      "'" + currentWordTime + "', " +     
+      "'" + timeBetween + "', " +    
+      "'" + dialogTime + "', " +    
+      "'" + netTimeBetween + "')"; 
+
     client.query(insert,
       function selectCb(err, results, fields) {
         if (err) { throw err; }
-        console.log('insert complete');
+        //console.log('insert complete');
       }
     );
       
@@ -178,6 +187,50 @@ function findStoryStartTime(testNumber, storyType) {
   } // resultsLoop
   
   return storyTime; 
+}
+
+function findStoryDialogTime(testNumber, storyType, prevWordTime, currentWordTime) {
+
+  //console.log('in findStoryDialogTime testNumber = '+testNumber+' storyType = '+storyType);
+
+  var totalDialogTime = 0;  
+
+  var dialogTime = '';
+
+  resultsloop: for (index in results.all) {  
+    var resultsRow = results.all[index];
+    if (resultsRow.testNumber == testNumber) {
+      if (storyType == 'story') {
+        dialogTime = resultsRow.storyDialogTime; 
+      } else if (storyType == 'practiceStory') {
+        dialogTime = resultsRow.storyPracticeDialogTime;
+      }
+      break;
+    }
+  } // resultsLoop
+  
+  dialogTime = dialogTime.trim();
+  dialogTime = dialogTime.split(" ");
+
+  console.log('testNumber = '+testNumber+' dialogTime = '+dialogTime);
+
+  for (var index = 0; index < dialogTime.length; index++) {
+    var startTime = dialogTime[index];
+    var pos = startTime.indexOf(":");
+    if (pos != -1) {
+      startTime = startTime.substring(pos+1);
+    }        
+    var endTime = dialogTime[++index];
+    pos = endTime.indexOf(":");
+    if (pos != -1) {
+      endTime = endTime.substring(pos+1);
+    }   
+    if (startTime >= prevWordTime && endTime <= currentWordTime) {
+      totalDialogTime += endTime - startTime;
+    }
+  }
+
+  return totalDialogTime; 
 }
 
 function loadWordTimeResults() {
