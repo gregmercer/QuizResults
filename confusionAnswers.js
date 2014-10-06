@@ -1,7 +1,8 @@
 
 var confusionAnswers = [
-    "p4.hacia"
-  , "p5.hacia"
+    "p4w23.hacia"
+  , "p4w63.hacia"    
+  , "p5w12.hacia"
 ];
 
 module.exports.all = confusionAnswers;

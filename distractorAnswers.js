@@ -31,19 +31,19 @@ está
 */
 
 var distractorAnswers = [
-    "p1.sabe"
-  , "p2.conoce"  
-  , "p2.es"  
-  , "p2.Es"
-  , "p3.supone"
-  , "p3.tiene"
-  , "p3.son" 
-  , "p3.son" 
-  , "p4.cuelga"
-  , "p4.indica"
-  , "p4.alimenten"
-  , "p4.simboliza" 
-  , "p5.está"  
+    "p1w20.sabe"
+  , "p2w27.conoce"  
+  , "p2w51.es"  
+  , "p2w63.Es"
+  , "p3w1.supone"
+  , "p3w18.tiene"
+  , "p3w34.son" 
+  , "p3w54.son" 
+  , "p4w22.cuelga"
+  , "p4w29.indica"
+  , "p4w34.alimenten"
+  , "p4w56.simboliza" 
+  , "p5w75.está"  
 ];
 
 module.exports.all = distractorAnswers;

@@ -11,7 +11,23 @@ var storyData =
     ]
 };
 
+// p1_duplicates = el,pueblo,a,los,por,las,de,su,y,tonatiuh,pero
+// p2_duplicates = los,monumentos,el,más,la,de,calendario,azteca,o,es
+// p3_duplicates = el,pueblo,azteca,de,en,la,los,son,y
+// p4_duplicates = los,lengua,al,sol,en,de,dios,el,la,que,hacia,un
+// p5_duplicates = se,el,de,una,en,la,del,a,los,y,lo,museo,nacional
+
 module.exports.all = storyData;
+
+module.exports.getNumParagraphs = function() {
+  return storyData.paragraphs.length;
+}  
+
+module.exports.getParagraph = function(paragraph_number) {
+  var text = storyData.paragraphs[paragraph_number].text;
+  var textArray = text.split(' ');
+  return textArray;
+}  
 
 module.exports.convert = function(oldAnswer) {
 
