@@ -191,7 +191,7 @@ function findStoryStartTime(testNumber, storyType) {
 
 function findStoryDialogTime(testNumber, storyType, prevWordTime, currentWordTime) {
 
-  //console.log('in findStoryDialogTime testNumber = '+testNumber+' storyType = '+storyType);
+  console.log('in findStoryDialogTime testNumber = '+testNumber+' storyType = '+storyType);
 
   var totalDialogTime = 0;  
 
@@ -213,6 +213,10 @@ function findStoryDialogTime(testNumber, storyType, prevWordTime, currentWordTim
   dialogTime = dialogTime.split(" ");
 
   console.log('testNumber = '+testNumber+' dialogTime = '+dialogTime);
+
+  if (dialogTime.length < 2) {
+    return totalDialogTime;
+  }
 
   for (var index = 0; index < dialogTime.length; index++) {
     var startTime = dialogTime[index];
