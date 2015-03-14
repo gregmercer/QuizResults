@@ -86,11 +86,14 @@ function loadFlagResults() {
 		textArray = textArray.map(function(value) {
 			return value.toLowerCase();
 		});		
+		console.log('p'+index+' textArray = '+textArray);
 
 		textArray = array_findDuplicates(textArray);
 		duplicates[index] = textArray;
 
 	}
+
+	console.log('duplicates = '+duplicates);
 
 	// loop thru the results
 
@@ -233,9 +236,22 @@ function findDuplicates(duplicates, selectedWords) {
 		for (var index = 0; index < duplicates.length; index++) {
 			var word = getRawWord(selectedWords[selectedIndex]);	
 			word = word.toLowerCase();
+
 			//console.log('word = ' + word);
 			//console.log('duplicates = ' + duplicates[index].toString());
-			if (inArray(word, duplicates[index])) {
+
+			var pnNumber = getPNNumber(selectedWords[selectedIndex]);
+
+			/*
+			console.log(
+				'word = ' + selectedWords[selectedIndex] +
+				' pNumber number = ' + pnNumber.pNumber + 
+				' wNumber number = ' + pnNumber.wNumber + 
+				' index = ' + index
+			);
+			*/
+
+			if ((pnNumber.pNumber == index+1) && (inArray(word, duplicates[index]))) {
 				duplicateWordsFound[duplicateWordsFound.length] = selectedWords[selectedIndex];
 			}
 		}	

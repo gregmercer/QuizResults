@@ -18,6 +18,7 @@ var loadtime = require("./routes/loadtime");
 var loadpoll = require("./routes/loadpoll");
 var loadphase = require("./routes/loadphase");
 var loadflag = require("./routes/loadflag");
+var loadboxtime = require("./routes/loadboxtime");
 
 var app = express();
 
@@ -54,6 +55,8 @@ app.get('/loadPollResults', loadpoll.loadpoll);
 app.get('/loadPhaseResults', loadphase.loadphase);
 
 app.get('/loadFlagResults', loadflag.loadflag);
+
+app.get('/loadBoxtimeResults', loadboxtime.loadboxtime);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

@@ -1,0 +1,10 @@
+CREATE TABLE `quiz_boxtime_results` (
+  `TestNumber` varchar(32) DEFAULT NULL,
+  `BoxTime1` varchar(20) DEFAULT NULL,
+  `BoxTime2` varchar(20) DEFAULT NULL,
+  `BoxTime3` varchar(20) DEFAULT NULL,
+  `BoxTime4` varchar(20) DEFAULT NULL,
+  `BoxTime5` varchar(20) DEFAULT NULL,
+  `TotalBoxTime` varchar(20) DEFAULT NULL,
+  `StoryTime` varchar(20) DEFAULT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
